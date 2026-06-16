@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:ecommerce/models/product_item_model.dart';
 import 'package:flutter/material.dart';
 
@@ -18,27 +19,39 @@ class ProductItem extends StatelessWidget {
               width: double.infinity,
               decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(16),
-                color: Colors.grey.shade200,
+                color: Colors.white54,
               ),
               alignment: Alignment.center,
               clipBehavior: Clip.antiAlias,
               child: ClipRRect(
                 borderRadius: BorderRadius.circular(8),
-                child: Image.network(
-                  product.imgUrl,
+                child: CachedNetworkImage(
+                  imageUrl: product.imgUrl,
                   width: 160,
                   height: 95,
                   fit: BoxFit.cover,
-                  errorBuilder: (context, error, stackTrace) {
-                    return const Icon(Icons.broken_image);
-                  },
+                  placeholder: (context, url) => SizedBox(
+                    width: 50,
+                    height: 50,
+                    child: CircularProgressIndicator(),
+                  ),
+                  errorWidget: (context, url, error) => Icon(Icons.error),
                 ),
               ),
             ),
             Positioned(
               top: 8,
               right: 8,
-              child: IconButton(onPressed: () {}, icon: Icon(Icons.favorite)),
+              child: DecoratedBox(
+                decoration: BoxDecoration(
+                  shape: BoxShape.circle,
+                  color: Colors.white,
+                ),
+                child: IconButton(
+                  onPressed: () {},
+                  icon: Icon(Icons.favorite_border),
+                ),
+              ),
             ),
           ],
         ),
