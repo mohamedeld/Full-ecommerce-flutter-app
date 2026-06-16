@@ -1,9 +1,9 @@
+import 'package:flutter/material.dart';
+import 'package:persistent_bottom_nav_bar_v2/persistent_bottom_nav_bar_v2.dart';
 import 'package:ecommerce/pages/cart_page.dart';
 import 'package:ecommerce/pages/favorite_page.dart';
 import 'package:ecommerce/pages/home_page.dart';
 import 'package:ecommerce/pages/profile_page.dart';
-import 'package:flutter/material.dart';
-import 'package:persistent_bottom_nav_bar_v2/persistent_bottom_nav_bar_v2.dart';
 
 class CustomBottomNavbar extends StatefulWidget {
   const CustomBottomNavbar({super.key});
