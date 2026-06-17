@@ -14,10 +14,7 @@ class MyApp extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       title: 'Flutter Demo',
       theme: ThemeData(colorScheme: .fromSeed(seedColor: Colors.deepPurple)),
-      home: Scaffold(
-        body: Center(child: Text("white")),
-        bottomNavigationBar: CustomBottomNavbar(),
-      ),
+      home: const CustomBottomNavbar(),
     );
   }
 }
