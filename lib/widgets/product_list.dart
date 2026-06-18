@@ -1,14 +1,18 @@
+import 'package:ecommerce/utils/app_routes.dart';
+import 'package:flutter/material.dart';
 import 'package:ecommerce/models/product_item_model.dart';
+import 'package:ecommerce/view_models/home_cubit/home_cubit.dart';
 import 'package:ecommerce/widgets/product_item.dart';
 import 'package:ecommerce/widgets/section_header.dart';
-import 'package:flutter/material.dart';
 
 class ProductList extends StatelessWidget {
-  const ProductList({super.key});
+  final HomeLoaded state;
+  const ProductList({super.key, required this.state});
 
   @override
   Widget build(BuildContext context) {
     final textTheme = Theme.of(context).textTheme;
+    final navigator = Navigator.of(context);
     return Column(
       children: [
         SectionHeader(
@@ -25,9 +29,13 @@ class ProductList extends StatelessWidget {
             crossAxisSpacing: 8,
             mainAxisSpacing: 8,
           ),
-          itemCount: dummyProducts.length,
-          itemBuilder: (context, index) =>
-              ProductItem(product: dummyProducts[index]),
+          itemCount: state.products.length,
+          itemBuilder: (context, index) => InkWell(
+            onTap: () {
+              navigator.pushNamed(AppRoutes.productDetailsRoute);
+            },
+            child: ProductItem(product: state.products[index]),
+          ),
         ),
       ],
     );
