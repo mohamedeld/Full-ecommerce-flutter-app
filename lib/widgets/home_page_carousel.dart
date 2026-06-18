@@ -1,10 +1,12 @@
-import 'package:cached_network_image/cached_network_image.dart';
-import 'package:ecommerce/models/home_carousel_item_model.dart';
 import 'package:flutter/material.dart';
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter_carousel_widget/flutter_carousel_widget.dart';
+import 'package:ecommerce/models/home_carousel_item_model.dart';
+import 'package:ecommerce/view_models/home_cubit/home_cubit.dart';
 
 class HomePageCarousel extends StatefulWidget {
-  const HomePageCarousel({super.key});
+  final HomeLoaded state;
+  const HomePageCarousel({super.key, required this.state});
 
   @override
   State<HomePageCarousel> createState() => _HomePageCarouselState();
@@ -31,7 +33,7 @@ class _HomePageCarouselState extends State<HomePageCarousel> {
               });
             },
           ),
-          itemCount: dummyHomeCarouselItems.length,
+          itemCount: widget.state.carouselItems.length,
           itemBuilder:
               (BuildContext context, int itemIndex, int pageViewIndex) =>
                   ClipRRect(
@@ -39,7 +41,7 @@ class _HomePageCarouselState extends State<HomePageCarousel> {
                     child: SizedBox(
                       width: double.infinity,
                       child: CachedNetworkImage(
-                        imageUrl: dummyHomeCarouselItems[itemIndex].imgUrl,
+                        imageUrl: widget.state.carouselItems[itemIndex].imgUrl,
                         placeholder: (context, url) => SizedBox(
                           width: 50,
                           height: 50,

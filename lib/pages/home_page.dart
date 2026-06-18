@@ -1,25 +1,25 @@
-import 'package:ecommerce/widgets/home_page_carousel.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:ecommerce/view_models/home_cubit/home_cubit.dart';
+import 'package:ecommerce/widgets/tabbar_container.dart';
 import 'package:ecommerce/widgets/navbar_widget.dart';
-import 'package:ecommerce/widgets/product_list.dart';
 
 class HomePage extends StatelessWidget {
   const HomePage({super.key});
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: SafeArea(
-        child: Padding(
-          padding: const EdgeInsets.all(16),
-          child: SingleChildScrollView(
+    return BlocProvider(
+      create: (context) => HomeCubit()..getHomeData(),
+      child: Scaffold(
+        body: SafeArea(
+          child: Padding(
+            padding: const EdgeInsets.all(16),
             child: Column(
               children: [
                 NavbarWidget(),
                 SizedBox(height: 32),
-                HomePageCarousel(),
-                SizedBox(height: 32),
-                ProductList(),
+                Expanded(child: TabbarContainer()),
               ],
             ),
           ),
