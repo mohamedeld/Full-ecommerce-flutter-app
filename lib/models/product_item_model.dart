@@ -6,6 +6,7 @@ class ProductItemModel {
   final double price;
   final bool isFavorite;
   final String category;
+  double avgRate;
 
   ProductItemModel({
     required this.id,
@@ -17,6 +18,7 @@ class ProductItemModel {
     required this.price,
     this.isFavorite = false,
     this.category = 'others',
+    this.avgRate = 0,
   });
 }
 
@@ -28,6 +30,7 @@ List<ProductItemModel> dummyProducts = [
         'https://images.unsplash.com/photo-1521572163474-6864f9cf17ab?w=600',
     price: 10,
     category: 'Clothes',
+    avgRate: 4.5,
   ),
   ProductItemModel(
     id: '2',
@@ -35,6 +38,7 @@ List<ProductItemModel> dummyProducts = [
     imgUrl: 'https://images.unsplash.com/photo-1542291026-7eec264c27ff?w=600',
     price: 20,
     category: 'Shoes',
+    avgRate: 4.0,
   ),
   ProductItemModel(
     id: '3',
@@ -43,6 +47,7 @@ List<ProductItemModel> dummyProducts = [
         'https://images.unsplash.com/photo-1473966968600-fa801b869a1a?w=600',
     price: 30,
     category: 'Clothes',
+    avgRate: 3.7,
   ),
   ProductItemModel(
     id: '4',
@@ -50,6 +55,7 @@ List<ProductItemModel> dummyProducts = [
     imgUrl: 'https://images.unsplash.com/photo-1546470427-e5a2d0c0b3c5?w=600',
     price: 10,
     category: 'Groceries',
+    avgRate: 4.9,
   ),
   ProductItemModel(
     id: '5',
@@ -58,6 +64,7 @@ List<ProductItemModel> dummyProducts = [
         'https://images.unsplash.com/photo-1518977676601-b53f82aba655?w=600',
     price: 10,
     category: 'Groceries',
+    avgRate: 4.1,
   ),
   ProductItemModel(
     id: '6',
@@ -66,6 +73,7 @@ List<ProductItemModel> dummyProducts = [
         'https://images.unsplash.com/photo-1506806732259-39c2d0268443?w=600',
     price: 10,
     category: 'Groceries',
+    avgRate: 4.3,
   ),
   ProductItemModel(
     id: '7',
@@ -74,6 +82,7 @@ List<ProductItemModel> dummyProducts = [
         'https://images.unsplash.com/photo-1567306226416-28f0efdc88ce?w=600',
     price: 10,
     category: 'Fruits',
+    avgRate: 3.5,
   ),
   ProductItemModel(
     id: '8',
@@ -81,6 +90,7 @@ List<ProductItemModel> dummyProducts = [
     imgUrl: 'https://images.unsplash.com/photo-1547514701-42782101795e?w=600',
     price: 10,
     category: 'Fruits',
+    avgRate: 4.8,
   ),
   ProductItemModel(
     id: '9',
@@ -89,6 +99,7 @@ List<ProductItemModel> dummyProducts = [
         'https://images.unsplash.com/photo-1587132137056-bfbf0166836e?w=600',
     price: 10,
     category: 'Fruits',
+    avgRate: 2.5,
   ),
   ProductItemModel(
     id: '10',
@@ -96,6 +107,7 @@ List<ProductItemModel> dummyProducts = [
     imgUrl: 'https://images.unsplash.com/photo-1553279768-865429fa0078?w=600',
     price: 10,
     category: 'Fruits',
+    avgRate: 1.5,
   ),
   ProductItemModel(
     id: '11',
@@ -104,5 +116,6 @@ List<ProductItemModel> dummyProducts = [
         'https://images.unsplash.com/photo-1520975661595-6453be3f7070?w=600',
     price: 15,
     category: 'Clothes',
+    avgRate: 4.55,
   ),
 ];

@@ -1,7 +1,9 @@
 import 'package:ecommerce/pages/custom_bottom_navbar.dart';
 import 'package:ecommerce/pages/product_details_page.dart';
 import 'package:ecommerce/utils/app_routes.dart';
+import 'package:ecommerce/view_models/product_details/product_details_cubit.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
 class AppRouter {
   static Route<dynamic> onGenerateRoute(RouteSettings settings) {
@@ -12,8 +14,19 @@ class AppRouter {
           settings: settings,
         );
       case AppRoutes.productDetailsRoute:
+        final String? productId = settings.arguments as String?;
+        if (productId == null) {
+          return MaterialPageRoute(
+            builder: (_) =>
+                const Scaffold(body: Center(child: Text('Missing product ID'))),
+          );
+        }
         return MaterialPageRoute(
-          builder: (_) => const ProductDetailsPage(),
+          builder: (_) => BlocProvider(
+            create: (context) =>
+                ProductDetailsCubit()..getProductDetails(productId),
+            child: ProductDetailsPage(productId: productId),
+          ),
           settings: settings,
         );
       default:

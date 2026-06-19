@@ -32,7 +32,10 @@ class ProductList extends StatelessWidget {
           itemCount: state.products.length,
           itemBuilder: (context, index) => InkWell(
             onTap: () {
-              navigator.pushNamed(AppRoutes.productDetailsRoute);
+              navigator.pushNamed(
+                AppRoutes.productDetailsRoute,
+                arguments: state.products[index].id,
+              );
             },
             child: ProductItem(product: state.products[index]),
           ),
