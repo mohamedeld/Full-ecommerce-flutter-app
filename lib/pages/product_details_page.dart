@@ -16,6 +16,7 @@ class ProductDetailsPage extends StatelessWidget {
     final textTheme = Theme.of(context).textTheme;
     return BlocBuilder<ProductDetailsCubit, ProductDetailsState>(
       bloc: productDetailsCubit,
+      buildWhen: (pre, curr) => curr is! QuantityDetailsLoaded,
       builder: (context, state) {
         if (state is ProductDetailsLoading) {
           return Scaffold(

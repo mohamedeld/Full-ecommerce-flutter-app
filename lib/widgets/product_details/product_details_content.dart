@@ -1,6 +1,12 @@
 import 'package:ecommerce/models/product_item_model.dart';
 import 'package:ecommerce/utils/app_colors.dart';
+import 'package:ecommerce/view_models/product_details/product_details_cubit.dart';
+import 'package:ecommerce/widgets/CounterWidget.dart';
+import 'package:ecommerce/widgets/product_details/product_description.dart';
+import 'package:ecommerce/widgets/product_details/product_price_cart.dart';
+import 'package:ecommerce/widgets/product_details/product_size.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
 class ProductDetailsContent extends StatelessWidget {
   final ProductItemModel product;
@@ -10,6 +16,7 @@ class ProductDetailsContent extends StatelessWidget {
   Widget build(BuildContext context) {
     final size = MediaQuery.of(context).size;
     final textTheme = Theme.of(context).textTheme;
+    final cubit = BlocProvider.of<ProductDetailsCubit>(context);
     return Padding(
       padding: EdgeInsets.only(top: size.height * 0.35),
       child: Container(
@@ -46,8 +53,37 @@ class ProductDetailsContent extends StatelessWidget {
                       ),
                     ],
                   ),
+                  BlocBuilder<ProductDetailsCubit, ProductDetailsState>(
+                    bloc: cubit,
+                    buildWhen: (prev, current) =>
+                        current is QuantityDetailsLoaded ||
+                        current is ProductDetailsLoaded,
+                    builder: (context, state) {
+                      if (state is QuantityDetailsLoaded) {
+                        return Counterwidget(
+                          value: state.value,
+                          productId: product.id,
+                          cubit: cubit,
+                        );
+                      } else if (state is ProductDetailsLoaded) {
+                        return Counterwidget(
+                          value: 1,
+                          productId: product.id,
+                          cubit: cubit,
+                        );
+                      } else {
+                        return const SizedBox.shrink();
+                      }
+                    },
+                  ),
                 ],
               ),
+              SizedBox(height: 7),
+              ProductSizeItem(),
+              SizedBox(height: 7),
+              ProductDescription(description: product.description),
+              const Spacer(),
+              ProductPriceCart(product: product),
             ],
           ),
         ),

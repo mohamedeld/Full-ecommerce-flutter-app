@@ -12,6 +12,11 @@ final class ProductDetailsLoaded extends ProductDetailsState {
   final ProductItemModel product;
 }
 
+final class QuantityDetailsLoaded extends ProductDetailsState {
+  final int value;
+  QuantityDetailsLoaded({required this.value});
+}
+
 final class ProductDetailsError extends ProductDetailsState {
   ProductDetailsError({required this.message});
 
