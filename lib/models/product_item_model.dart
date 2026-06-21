@@ -84,7 +84,8 @@ List<ProductItemModel> dummyProducts = [
   ProductItemModel(
     id: '4',
     title: 'Tomatoes',
-    imgUrl: 'https://images.unsplash.com/photo-1546470427-e5a2d0c0b3c5?w=600',
+    imgUrl:
+        'https://images.unsplash.com/photo-1582284540020-8acbe03f4924?w=600',
     price: 10,
     category: 'Groceries',
     avgRate: 4.9,

@@ -1,9 +1,13 @@
+import 'package:ecommerce/models/add_to_cart_model.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:ecommerce/models/product_item_model.dart';
 
 part 'product_details_state.dart';
 
 class ProductDetailsCubit extends Cubit<ProductDetailsState> {
+  int quantity = 1;
+  ProductSize? selectedSize;
   ProductDetailsCubit() : super(ProductDetailsInitial());
 
   void getProductDetails(String id) {
@@ -17,26 +21,41 @@ class ProductDetailsCubit extends Cubit<ProductDetailsState> {
   }
 
   void incrementCounter(String productId) {
-    final selectedIndex = dummyProducts.indexWhere(
-      (element) => element.id == productId,
-    );
-    dummyProducts[selectedIndex] = dummyProducts[selectedIndex].copyWith(
-      quantity: dummyProducts[selectedIndex].quantity + 1,
-    );
-
-    emit(QuantityDetailsLoaded(value: dummyProducts[selectedIndex].quantity));
+    quantity++;
+    emit(QuantityDetailsLoaded(value: quantity));
   }
 
   void decrementCounter(String productId) {
-    final selectedIndex = dummyProducts.indexWhere(
-      (element) => element.id == productId,
-    );
-    if (dummyProducts[selectedIndex].quantity > 1) {
-      dummyProducts[selectedIndex] = dummyProducts[selectedIndex].copyWith(
-        quantity: dummyProducts[selectedIndex].quantity - 1,
-      );
+    quantity--;
 
-      emit(QuantityDetailsLoaded(value: dummyProducts[selectedIndex].quantity));
+    emit(QuantityDetailsLoaded(value: quantity));
+  }
+
+  void selectSize(ProductSize size) {
+    selectedSize = size;
+    emit(SizeSelected(size: size));
+  }
+
+  void addToCart(String productId) {
+    if (selectedSize == null) {
+      emit(ProductDetailsError(message: "Please select a size first"));
+      return;
     }
+
+    if (quantity <= 0) {
+      quantity = 1;
+    }
+
+    emit(ProductAddingToCart());
+    final AddToCartModel cartItem = AddToCartModel(
+      productId: productId,
+      size: selectedSize!,
+      quantity: quantity,
+    );
+    dummyCart.add(cartItem);
+
+    Future.delayed(const Duration(seconds: 1), () {
+      emit(AddedToCart(productId: productId));
+    });
   }
 }
