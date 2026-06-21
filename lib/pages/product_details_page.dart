@@ -14,47 +14,74 @@ class ProductDetailsPage extends StatelessWidget {
   Widget build(BuildContext context) {
     final productDetailsCubit = BlocProvider.of<ProductDetailsCubit>(context);
     final textTheme = Theme.of(context).textTheme;
-    return BlocBuilder<ProductDetailsCubit, ProductDetailsState>(
-      bloc: productDetailsCubit,
-      buildWhen: (pre, curr) => curr is! QuantityDetailsLoaded,
-      builder: (context, state) {
-        if (state is ProductDetailsLoading) {
-          return Scaffold(
-            body: Center(child: CircularProgressIndicator.adaptive()),
+    return BlocListener<ProductDetailsCubit, ProductDetailsState>(
+      listener: (context, state) {
+        if (state is ProductDetailsError) {
+          ScaffoldMessenger.of(
+            context,
+          ).showSnackBar(SnackBar(content: Text(state.message)));
+        }
+
+        if (state is AddedToCart) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(content: Text("Added to cart successfully")),
           );
-        } else if (state is ProductDetailsLoaded) {
-          return Scaffold(
-            appBar: AppBar(
-              title: Text("Product Details"),
-              actions: [
-                IconButton(onPressed: () {}, icon: Icon(Icons.favorite_border)),
-              ],
-            ),
-            body: Stack(
-              children: [
-                Container(
-                  decoration: BoxDecoration(color: AppColors.grey),
-                  child: CachedNetworkImage(
-                    imageUrl: state.product.imgUrl,
-                    placeholder: (context, url) => SizedBox(
-                      width: 50,
-                      height: 50,
-                      child: CircularProgressIndicator(),
-                    ),
-                  ),
-                ),
-                ProductDetailsContent(product: state.product),
-              ],
-            ),
-          );
-        } else if (state is ProductDetailsError) {
-          return Center(
-            child: Text(state.message, style: textTheme.labelLarge),
-          );
-        } else {
-          return const SizedBox.shrink();
+        }
+
+        if (state is ProductAddingToCart) {
+          ScaffoldMessenger.of(
+            context,
+          ).showSnackBar(const SnackBar(content: Text("Adding to cart...")));
         }
       },
+      child: BlocBuilder<ProductDetailsCubit, ProductDetailsState>(
+        bloc: productDetailsCubit,
+        buildWhen: (pre, current) =>
+            current is ProductDetailsLoading ||
+            current is ProductDetailsLoaded ||
+            current is ProductDetailsError,
+        builder: (context, state) {
+          if (state is ProductDetailsLoading) {
+            return Scaffold(
+              body: Center(child: CircularProgressIndicator.adaptive()),
+            );
+          } else if (state is ProductDetailsLoaded) {
+            return Scaffold(
+              appBar: AppBar(
+                title: Text("Product Details"),
+                actions: [
+                  IconButton(
+                    onPressed: () {},
+                    icon: Icon(Icons.favorite_border),
+                  ),
+                ],
+              ),
+              body: Stack(
+                children: [
+                  Container(
+                    decoration: BoxDecoration(color: AppColors.grey),
+                    child: CachedNetworkImage(
+                      imageUrl: state.product.imgUrl,
+                      placeholder: (context, url) => SizedBox(
+                        width: 50,
+                        height: 50,
+                        child: CircularProgressIndicator(),
+                      ),
+                    ),
+                  ),
+                  ProductDetailsContent(product: state.product),
+                ],
+              ),
+            );
+          } else if (state is ProductDetailsError) {
+            return Center(
+              child: Text(state.message, style: textTheme.labelLarge),
+            );
+          } else {
+            return const SizedBox.shrink();
+          }
+        },
+      ),
     );
   }
 }
