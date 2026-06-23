@@ -17,8 +17,9 @@ class ProductDetailsContent extends StatelessWidget {
     final size = MediaQuery.of(context).size;
     final textTheme = Theme.of(context).textTheme;
     final cubit = BlocProvider.of<ProductDetailsCubit>(context);
+
     return Padding(
-      padding: EdgeInsets.only(top: size.height * 0.35),
+      padding: EdgeInsets.only(top: size.height * 0.28),
       child: Container(
         width: double.infinity,
         decoration: BoxDecoration(
@@ -59,21 +60,21 @@ class ProductDetailsContent extends StatelessWidget {
                         current is QuantityDetailsLoaded ||
                         current is ProductDetailsLoaded,
                     builder: (context, state) {
+                      // Get quantity from cubit's map or default to 1
+                      int quantity = cubit.productQuantities[product.id] ?? 1;
+
                       if (state is QuantityDetailsLoaded) {
-                        return Counterwidget(
-                          value: state.value,
-                          productId: product.id,
-                          cubit: cubit,
-                        );
+                        quantity = state.value;
                       } else if (state is ProductDetailsLoaded) {
-                        return Counterwidget(
-                          value: 1,
-                          productId: product.id,
-                          cubit: cubit,
-                        );
-                      } else {
-                        return const SizedBox.shrink();
+                        quantity = cubit.productQuantities[product.id] ?? 1;
                       }
+
+                      return Counterwidget(
+                        value: quantity,
+                        productId: product.id,
+                        cubit: cubit,
+                        initialValue: quantity,
+                      );
                     },
                   ),
                 ],
