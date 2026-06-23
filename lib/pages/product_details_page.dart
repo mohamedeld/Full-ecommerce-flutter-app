@@ -37,9 +37,7 @@ class ProductDetailsPage extends StatelessWidget {
       child: BlocBuilder<ProductDetailsCubit, ProductDetailsState>(
         bloc: productDetailsCubit,
         buildWhen: (pre, current) =>
-            current is ProductDetailsLoading ||
-            current is ProductDetailsLoaded ||
-            current is ProductDetailsError,
+            current is ProductDetailsLoading || current is ProductDetailsLoaded,
         builder: (context, state) {
           if (state is ProductDetailsLoading) {
             return Scaffold(
@@ -72,10 +70,6 @@ class ProductDetailsPage extends StatelessWidget {
                   ProductDetailsContent(product: state.product),
                 ],
               ),
-            );
-          } else if (state is ProductDetailsError) {
-            return Center(
-              child: Text(state.message, style: textTheme.labelLarge),
             );
           } else {
             return const SizedBox.shrink();

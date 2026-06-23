@@ -11,17 +11,14 @@ class HomePage extends StatelessWidget {
   Widget build(BuildContext context) {
     return BlocProvider(
       create: (context) => HomeCubit()..getHomeData(),
-      child: Scaffold(
-        body: SafeArea(
-          child: Padding(
-            padding: const EdgeInsets.all(16),
-            child: Column(
-              children: [
-                NavbarWidget(),
-                SizedBox(height: 32),
-                Expanded(child: TabbarContainer()),
-              ],
-            ),
+      child: SafeArea(
+        child: Padding(
+          padding: const EdgeInsets.all(16),
+          child: Column(
+            children: [
+              SizedBox(height: 32),
+              Expanded(child: TabbarContainer()),
+            ],
           ),
         ),
       ),

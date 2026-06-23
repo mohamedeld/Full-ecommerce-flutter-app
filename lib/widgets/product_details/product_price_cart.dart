@@ -42,7 +42,7 @@ class ProductPriceCart extends StatelessWidget {
             } else {
               return ElevatedButton.icon(
                 onPressed: () {
-                  cubit.addToCart(product.id);
+                  cubit.addToCart(product);
                 },
                 style: ElevatedButton.styleFrom(
                   backgroundColor: AppColors.primary,
