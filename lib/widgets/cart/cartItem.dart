@@ -1,5 +1,4 @@
 import 'package:cached_network_image/cached_network_image.dart';
-import 'package:ecommerce/models/product_item_model.dart';
 import 'package:ecommerce/utils/app_colors.dart';
 import 'package:ecommerce/view_models/cart/cart_cubit.dart';
 import 'package:ecommerce/widgets/CounterWidget.dart';
@@ -8,13 +7,13 @@ import 'package:ecommerce/models/add_to_cart_model.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 class CartItem extends StatelessWidget {
+  final bool isCheckout;
   final AddToCartModel cartItem;
-  const CartItem({super.key, required this.cartItem});
+  const CartItem({super.key, required this.cartItem, this.isCheckout = false});
 
   @override
   Widget build(BuildContext context) {
     final textTheme = Theme.of(context).textTheme;
-    final cubit = BlocProvider.of<CartCubit>(context);
 
     return Padding(
       padding: const EdgeInsets.all(16.0),
@@ -68,27 +67,33 @@ class CartItem extends StatelessWidget {
                         fontWeight: FontWeight.w600,
                       ),
                     ),
-                    BlocBuilder<CartCubit, CartState>(
-                      buildWhen: (previous, current) =>
-                          current is QuantityCartLoaded,
-                      builder: (context, state) {
-                        // Get the quantity for this specific product
-                        int quantity =
-                            cubit.quantities[cartItem.product.id] ?? 1;
+                    !isCheckout
+                        ? BlocBuilder<CartCubit, CartState>(
+                            buildWhen: (previous, current) =>
+                                current is QuantityCartLoaded,
+                            builder: (context, state) {
+                              // Get the quantity for this specific product
+                              int quantity =
+                                  BlocProvider.of<CartCubit>(
+                                    context,
+                                  ).quantities[cartItem.product.id] ??
+                                  1;
 
-                        if (state is QuantityCartLoaded) {
-                          // Use the updated quantity from state
-                          quantity = state.quantities[cartItem.product.id] ?? 1;
-                        }
+                              if (state is QuantityCartLoaded) {
+                                // Use the updated quantity from state
+                                quantity =
+                                    state.quantities[cartItem.product.id] ?? 1;
+                              }
 
-                        return Counterwidget(
-                          value: quantity,
-                          initialValue: cartItem.product.quantity ?? 1,
-                          productId: cartItem.product.id,
-                          cubit: cubit,
-                        );
-                      },
-                    ),
+                              return Counterwidget(
+                                value: quantity,
+                                initialValue: cartItem.product.quantity ?? 1,
+                                productId: cartItem.product.id,
+                                cubit: BlocProvider.of<CartCubit>(context),
+                              );
+                            },
+                          )
+                        : SizedBox.shrink(),
                   ],
                 ),
               ],
