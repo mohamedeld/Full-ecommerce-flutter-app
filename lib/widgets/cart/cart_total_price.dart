@@ -1,4 +1,5 @@
 import 'package:ecommerce/utils/app_colors.dart';
+import 'package:ecommerce/utils/app_routes.dart';
 import 'package:ecommerce/widgets/cart/total_and_subtotal.dart';
 import 'package:flutter/material.dart';
 
@@ -31,7 +32,9 @@ class CartTotalPrice extends StatelessWidget {
               height: 50,
               width: double.infinity,
               child: ElevatedButton(
-                onPressed: () {},
+                onPressed: () {
+                  Navigator.of(context).pushNamed(AppRoutes.checkoutRoute);
+                },
                 child: const Text("Checkout"),
                 style: ElevatedButton.styleFrom(
                   backgroundColor: theme.primaryColor,
