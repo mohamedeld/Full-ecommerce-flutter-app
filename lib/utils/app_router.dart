@@ -1,3 +1,5 @@
+import 'package:ecommerce/pages/add_new_card.dart';
+import 'package:ecommerce/view_models/card_payment/add_new_card_cubit.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:ecommerce/pages/checkout_page.dart';
@@ -12,6 +14,14 @@ class AppRouter {
       case AppRoutes.homeRoute:
         return MaterialPageRoute(
           builder: (_) => const CustomBottomNavbar(),
+          settings: settings,
+        );
+      case AppRoutes.addCardRoute:
+        return MaterialPageRoute(
+          builder: (_) => BlocProvider(
+            create: (context) => AddNewCardCubit(),
+            child: const AddNewCard(),
+          ),
           settings: settings,
         );
       case AppRoutes.checkoutRoute:
