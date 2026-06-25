@@ -1,7 +1,9 @@
 import 'package:ecommerce/utils/app_colors.dart';
+import 'package:ecommerce/utils/app_routes.dart';
 import 'package:ecommerce/view_models/checkout/checkout_cubit.dart';
 import 'package:ecommerce/widgets/cart/cartItem.dart';
 import 'package:ecommerce/widgets/checkout/address_container.dart';
+import 'package:ecommerce/widgets/checkout/payment_method_item.dart';
 import 'package:flutter/material.dart';
 import 'package:ecommerce/widgets/checkout/checkout_headline.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -30,7 +32,10 @@ class CheckoutPage extends StatelessWidget {
                       children: [
                         CheckoutHeadline(title: "Address", onTap: () {}),
                         SizedBox(height: 8),
-                        AddressContainer(title: "Add shipping address"),
+                        AddressContainer(
+                          title: "Add shipping address",
+                          onTap: () {},
+                        ),
                         SizedBox(height: 8),
 
                         CheckoutHeadline(
@@ -51,7 +56,23 @@ class CheckoutPage extends StatelessWidget {
                         Divider(color: AppColors.grey2),
                         CheckoutHeadline(title: "Payment"),
                         SizedBox(height: 8),
-                        AddressContainer(title: "Add payment method"),
+                        state.paymentItems.isEmpty
+                            ? AddressContainer(
+                                title: "Add payment method",
+                                onTap: () {
+                                  Navigator.of(context)
+                                      .pushNamed(AppRoutes.addCardRoute)
+                                      .then(
+                                        (value) =>
+                                            BlocProvider.of<CheckoutCubit>(
+                                              context,
+                                            ).getCheckout(),
+                                      );
+                                },
+                              )
+                            : PaymentMethodItem(
+                                paymentCard: state.paymentItems[0],
+                              ),
                         Divider(color: AppColors.grey2),
                         Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
