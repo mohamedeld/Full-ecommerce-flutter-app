@@ -3,6 +3,7 @@ import 'package:ecommerce/utils/app_routes.dart';
 import 'package:ecommerce/view_models/checkout/checkout_cubit.dart';
 import 'package:ecommerce/widgets/cart/cartItem.dart';
 import 'package:ecommerce/widgets/checkout/address_container.dart';
+import 'package:ecommerce/widgets/checkout/bottom_sheet_payment.dart';
 import 'package:ecommerce/widgets/checkout/payment_method_item.dart';
 import 'package:flutter/material.dart';
 import 'package:ecommerce/widgets/checkout/checkout_headline.dart';
@@ -22,6 +23,10 @@ class CheckoutPage extends StatelessWidget {
       },
       child: Scaffold(
         body: BlocBuilder<CheckoutCubit, CheckoutState>(
+          buildWhen: (previous, current) =>
+              current is CheckoutLoaded ||
+              current is CheckoutLoading ||
+              current is CheckoutError,
           builder: (context, state) {
             if (state is CheckoutLoaded) {
               return SafeArea(
@@ -72,6 +77,27 @@ class CheckoutPage extends StatelessWidget {
                               )
                             : PaymentMethodItem(
                                 paymentCard: state.paymentItems[0],
+                                cubit: BlocProvider.of<CheckoutCubit>(context),
+                                onTap: () {
+                                  final cubit = context.read<CheckoutCubit>();
+
+                                  showModalBottomSheet(
+                                    context: context,
+                                    builder: (bottomSheetContext) =>
+                                        BlocProvider.value(
+                                          // ← Add this
+                                          value: cubit, // ← Pass existing cubit
+                                          child: SizedBox(
+                                            width: double.infinity,
+                                            height: 400,
+                                            child: BottomSheetPayment(
+                                              paymentItems: state.paymentItems,
+                                              cubit: cubit,
+                                            ),
+                                          ),
+                                        ),
+                                  );
+                                },
                               ),
                         Divider(color: AppColors.grey2),
                         Row(

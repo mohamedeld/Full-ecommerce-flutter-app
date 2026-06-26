@@ -23,3 +23,9 @@ final class CheckoutError extends CheckoutState {
 
   CheckoutError({required this.message});
 }
+
+final class PaymentMethodChosen extends CheckoutState {
+  final PaymentCartModel chosenPayment;
+
+  PaymentMethodChosen(this.chosenPayment);
+}
