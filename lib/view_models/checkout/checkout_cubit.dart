@@ -23,4 +23,23 @@ class CheckoutCubit extends Cubit<CheckoutState> {
       ),
     );
   }
+
+  void choosePaymentMethod(String id) {
+    // Update the list properly
+    for (int i = 0; i < dummyPaymentCards.length; i++) {
+      if (dummyPaymentCards[i].isChosen == true) {
+        dummyPaymentCards[i] = dummyPaymentCards[i].copyWith(isChosen: false);
+      }
+      if (dummyPaymentCards[i].id == id) {
+        dummyPaymentCards[i] = dummyPaymentCards[i].copyWith(isChosen: true);
+      }
+    }
+
+    final chosen = dummyPaymentCards.firstWhere(
+      (item) => item.id == id,
+      orElse: () => dummyPaymentCards.first, // safe fallback
+    );
+
+    emit(PaymentMethodChosen(chosen));
+  }
 }
