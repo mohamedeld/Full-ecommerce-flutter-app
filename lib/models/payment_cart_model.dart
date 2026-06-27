@@ -34,4 +34,40 @@ class PaymentCartModel {
   }
 }
 
-List<PaymentCartModel> dummyPaymentCards = [];
+List<PaymentCartModel> dummyPaymentCards = [
+  PaymentCartModel(
+    id: '1',
+    cardNumber: '1234 5678 9012 3456',
+    cardHolderName: 'Tarek Alabd',
+    expiryDate: '12/23',
+    cvv: '123',
+  ),
+  PaymentCartModel(
+    id: '2',
+    cardNumber: '1234 5678 9012 3466',
+    cardHolderName: 'John Doe',
+    expiryDate: '12/23',
+    cvv: '123',
+  ),
+  PaymentCartModel(
+    id: '3',
+    cardNumber: '1234 5678 9012 3477',
+    cardHolderName: 'Tim Smith',
+    expiryDate: '12/23',
+    cvv: '123',
+  ),
+  PaymentCartModel(
+    id: '4',
+    cardNumber: '1234 5678 9012 3488',
+    cardHolderName: 'John Doe',
+    expiryDate: '12/23',
+    cvv: '123',
+  ),
+  PaymentCartModel(
+    id: '5',
+    cardNumber: '1234 5678 9012 3499',
+    cardHolderName: 'Tim Smith',
+    expiryDate: '12/23',
+    cvv: '123',
+  ),
+];
