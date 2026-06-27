@@ -4,14 +4,17 @@ import 'package:ecommerce/utils/app_routes.dart';
 import 'package:ecommerce/view_models/checkout/checkout_cubit.dart';
 import 'package:ecommerce/widgets/checkout/payment_method_item.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
 class BottomSheetPayment extends StatelessWidget {
   final List<PaymentCartModel> paymentItems;
+  final VoidCallback onConfirm;
   final CheckoutCubit cubit;
   const BottomSheetPayment({
     super.key,
     required this.paymentItems,
     required this.cubit,
+    required this.onConfirm,
   });
 
   @override
@@ -41,7 +44,9 @@ class BottomSheetPayment extends StatelessWidget {
                   padding: const EdgeInsets.symmetric(vertical: 8.0),
                   child: PaymentMethodItem(
                     paymentCard: paymentItems[index],
-                    onTap: () {},
+                    onTap: () {
+                      cubit.choosePaymentMethod(paymentItems[index].id);
+                    },
                     cubit: cubit,
                     isRadio: true,
                   ),
@@ -77,18 +82,46 @@ class BottomSheetPayment extends StatelessWidget {
             const SizedBox(height: 16),
 
             // Confirm Payment button
-            SizedBox(
-              height: 50,
-              width: double.infinity,
-              child: ElevatedButton(
-                onPressed: () {},
-                style: ElevatedButton.styleFrom(
-                  elevation: 0,
-                  backgroundColor: AppColors.primary,
-                  foregroundColor: AppColors.white,
-                ),
-                child: const Text("Confirm Payment"),
-              ),
+            BlocBuilder<CheckoutCubit, CheckoutState>(
+              bloc: cubit,
+              buildWhen: (previous, current) =>
+                  current is ConfirmPaymentLoading ||
+                  current is ConfirmPaymentLoaded ||
+                  current is ConfirmPaymentError,
+
+              builder: (context, state) {
+                if (state is ConfirmPaymentLoading) {
+                  return SizedBox(
+                    height: 50,
+                    width: double.infinity,
+                    child: ElevatedButton(
+                      onPressed: () {},
+                      style: ElevatedButton.styleFrom(
+                        elevation: 0,
+                        backgroundColor: AppColors.primary,
+                        foregroundColor: AppColors.white,
+                      ),
+                      child: CircularProgressIndicator.adaptive(),
+                    ),
+                  );
+                }
+                return SizedBox(
+                  height: 50,
+                  width: double.infinity,
+                  child: ElevatedButton(
+                    onPressed: () {
+                      cubit.confirmPaymentMethod();
+                      onConfirm();
+                    },
+                    style: ElevatedButton.styleFrom(
+                      elevation: 0,
+                      backgroundColor: AppColors.primary,
+                      foregroundColor: AppColors.white,
+                    ),
+                    child: const Text("Confirm Payment"),
+                  ),
+                );
+              },
             ),
           ],
         ),

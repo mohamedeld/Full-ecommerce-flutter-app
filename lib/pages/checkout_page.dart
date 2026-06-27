@@ -26,7 +26,8 @@ class CheckoutPage extends StatelessWidget {
           buildWhen: (previous, current) =>
               current is CheckoutLoaded ||
               current is CheckoutLoading ||
-              current is CheckoutError,
+              current is CheckoutError ||
+              current is ConfirmPaymentLoaded,
           builder: (context, state) {
             if (state is CheckoutLoaded) {
               return SafeArea(
@@ -76,7 +77,7 @@ class CheckoutPage extends StatelessWidget {
                                 },
                               )
                             : PaymentMethodItem(
-                                paymentCard: state.paymentItems[0],
+                                paymentCard: state.chosenPaymentCard,
                                 cubit: BlocProvider.of<CheckoutCubit>(context),
                                 onTap: () {
                                   final cubit = context.read<CheckoutCubit>();
@@ -93,6 +94,8 @@ class CheckoutPage extends StatelessWidget {
                                             child: BottomSheetPayment(
                                               paymentItems: state.paymentItems,
                                               cubit: cubit,
+                                              onConfirm: () =>
+                                                  Navigator.of(context).pop(),
                                             ),
                                           ),
                                         ),
