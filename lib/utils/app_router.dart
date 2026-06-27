@@ -1,5 +1,7 @@
 import 'package:ecommerce/pages/add_new_card.dart';
+import 'package:ecommerce/pages/choose_location.dart';
 import 'package:ecommerce/view_models/card_payment/add_new_card_cubit.dart';
+import 'package:ecommerce/view_models/choose_location/choose_location_cubit.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:ecommerce/pages/checkout_page.dart';
@@ -27,6 +29,18 @@ class AppRouter {
       case AppRoutes.checkoutRoute:
         return MaterialPageRoute(
           builder: (_) => const CheckoutPage(),
+          settings: settings,
+        );
+      case AppRoutes.chooseLocation:
+        return MaterialPageRoute(
+          builder: (_) => BlocProvider(
+            create: (context) {
+              final cubit = ChooseLocationCubit();
+              cubit.fetchLocations();
+              return cubit;
+            },
+            child: const ChooseLocation(),
+          ),
           settings: settings,
         );
       case AppRoutes.productDetailsRoute:
