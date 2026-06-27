@@ -40,7 +40,11 @@ class CheckoutPage extends StatelessWidget {
                         SizedBox(height: 8),
                         AddressContainer(
                           title: "Add shipping address",
-                          onTap: () {},
+                          onTap: () {
+                            Navigator.of(
+                              context,
+                            ).pushNamed(AppRoutes.chooseLocation);
+                          },
                         ),
                         SizedBox(height: 8),
 
