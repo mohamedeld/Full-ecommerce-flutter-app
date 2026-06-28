@@ -1,3 +1,4 @@
+import 'package:ecommerce/models/location_item_model.dart';
 import 'package:ecommerce/models/payment_cart_model.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:ecommerce/models/add_to_cart_model.dart';
@@ -24,13 +25,17 @@ class CheckoutCubit extends Cubit<CheckoutState> {
       (item) => item.isChosen == true,
       orElse: () => dummyPaymentCards.first,
     );
-
+    final chosenLocaiton = dummyLocations.firstWhere(
+      (item) => item.isChosen == true,
+      orElse: () => dummyLocations.first,
+    );
     emit(
       CheckoutLoaded(
         cartItems: cartItems,
         total: subTotal + 10,
         paymentItems: dummyPaymentCards,
         chosenPaymentCard: chosenPaymentCard,
+        chosenLocation: chosenLocaiton,
       ),
     );
   }

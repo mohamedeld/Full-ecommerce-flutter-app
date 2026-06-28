@@ -24,3 +24,19 @@ final class ErrorAddingLocation extends ChooseLocationState {
   final String message;
   ErrorAddingLocation({required this.message});
 }
+
+final class LocationChosen extends ChooseLocationState {
+  final LocationItemModel chosenLocation;
+
+  LocationChosen(this.chosenLocation);
+}
+
+final class ConfirmLocationLoading extends ChooseLocationState {}
+
+final class ConfirmLocationLoaded extends ChooseLocationState {}
+
+final class ConfirmLocationError extends ChooseLocationState {
+  final String message;
+
+  ConfirmLocationError({required this.message});
+}
