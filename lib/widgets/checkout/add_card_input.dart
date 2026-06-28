@@ -9,6 +9,7 @@ class AddCardInput extends StatefulWidget {
   final String? errorText;
   final bool? isFormField;
   final Widget? suffixIcon;
+  final bool obscureText;
 
   const AddCardInput({
     super.key,
@@ -19,6 +20,7 @@ class AddCardInput extends StatefulWidget {
     this.errorText,
     this.isFormField = true,
     this.suffixIcon,
+    this.obscureText = false,
   });
 
   @override
@@ -43,6 +45,7 @@ class _AddCardInputState extends State<AddCardInput> {
                 validator: (value) => value == null || value.isEmpty
                     ? 'This field is required'
                     : null,
+                obscureText: widget.obscureText,
                 decoration: InputDecoration(
                   fillColor: AppColors.grey1,
                   prefixIcon: widget.Icon,
