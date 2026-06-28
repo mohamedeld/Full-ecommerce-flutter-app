@@ -11,12 +11,14 @@ final class CheckoutLoaded extends CheckoutState {
   final double total;
   final List<PaymentCartModel> paymentItems;
   final PaymentCartModel chosenPaymentCard;
+  final LocationItemModel? chosenLocation;
 
   CheckoutLoaded({
     required this.cartItems,
     required this.total,
     required this.paymentItems,
     required this.chosenPaymentCard,
+    this.chosenLocation,
   });
 }
 

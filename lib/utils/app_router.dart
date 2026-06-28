@@ -1,6 +1,7 @@
 import 'package:ecommerce/pages/add_new_card.dart';
 import 'package:ecommerce/pages/choose_location.dart';
 import 'package:ecommerce/pages/login_page.dart';
+import 'package:ecommerce/pages/register_page.dart';
 import 'package:ecommerce/view_models/card_payment/add_new_card_cubit.dart';
 import 'package:ecommerce/view_models/choose_location/choose_location_cubit.dart';
 import 'package:flutter/material.dart';
@@ -22,6 +23,11 @@ class AppRouter {
       case AppRoutes.loginRoute:
         return MaterialPageRoute(
           builder: (_) => const LoginPage(),
+          settings: settings,
+        );
+      case AppRoutes.registerRoute:
+        return MaterialPageRoute(
+          builder: (_) => const RegisterPage(),
           settings: settings,
         );
       case AppRoutes.addCardRoute:

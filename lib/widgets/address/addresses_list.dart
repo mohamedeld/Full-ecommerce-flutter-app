@@ -31,7 +31,7 @@ class _AddressesListState extends State<AddressesList> {
                 physics: const NeverScrollableScrollPhysics(),
                 itemCount: dummyLocations.length,
                 itemBuilder: (context, index) =>
-                    AddressItem(location: state.locations[index]),
+                    AddressItem(location: state.locations[index], cubit: cubit),
               );
             } else if (state is FetchingLocation) {
               return Center(child: CircularProgressIndicator.adaptive());
@@ -43,18 +43,44 @@ class _AddressesListState extends State<AddressesList> {
           },
         ),
         const SizedBox(height: 16),
-        SizedBox(
-          height: 50,
-          width: double.infinity,
-          child: ElevatedButton(
-            onPressed: () {},
-            style: ElevatedButton.styleFrom(
-              elevation: 0,
-              backgroundColor: AppColors.primary,
-              foregroundColor: AppColors.white,
-            ),
-            child: const Text("Confirm Address"),
-          ),
+        BlocBuilder<ChooseLocationCubit, ChooseLocationState>(
+          buildWhen: (previous, current) =>
+              current is ConfirmLocationError ||
+              current is ConfirmLocationLoaded ||
+              current is ConfirmLocationLoading,
+          bloc: cubit,
+          builder: (context, state) {
+            if (state is ConfirmLocationLoading) {
+              return SizedBox(
+                height: 50,
+                width: double.infinity,
+                child: ElevatedButton(
+                  onPressed: () {},
+                  style: ElevatedButton.styleFrom(
+                    elevation: 0,
+                    backgroundColor: AppColors.primary,
+                    foregroundColor: AppColors.white,
+                  ),
+                  child: Center(child: CircularProgressIndicator.adaptive()),
+                ),
+              );
+            }
+            return SizedBox(
+              height: 50,
+              width: double.infinity,
+              child: ElevatedButton(
+                onPressed: () {
+                  cubit.confirmChosenLocation();
+                },
+                style: ElevatedButton.styleFrom(
+                  elevation: 0,
+                  backgroundColor: AppColors.primary,
+                  foregroundColor: AppColors.white,
+                ),
+                child: const Text("Confirm Address"),
+              ),
+            );
+          },
         ),
       ],
     );

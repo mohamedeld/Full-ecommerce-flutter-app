@@ -12,7 +12,7 @@ class ProductList extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final textTheme = Theme.of(context).textTheme;
-    final navigator = Navigator.of(context, rootNavigator: true);
+    final navigator = Navigator.of(context);
     return Column(
       children: [
         SectionHeader(

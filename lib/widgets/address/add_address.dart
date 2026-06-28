@@ -31,9 +31,12 @@ class _AddAddressState extends State<AddAddress> {
                   SnackBar(content: Text("Address Added successfully")),
                 );
                 _writeLocaiton.clear();
+              } else if (state is ConfirmLocationLoaded) {
+                Navigator.pop(context);
               }
             },
-            listenWhen: (previous, current) => current is AddedLocation,
+            listenWhen: (previous, current) =>
+                current is AddedLocation || current is ConfirmLocationLoaded,
             bloc: widget.cubit,
             buildWhen: (previous, current) =>
                 current is AddingLocation ||
