@@ -1,4 +1,5 @@
 import 'package:ecommerce/utils/app_colors.dart';
+import 'package:ecommerce/utils/app_routes.dart';
 import 'package:ecommerce/widgets/auth/login_form.dart';
 import 'package:ecommerce/widgets/auth/social_login.dart';
 import 'package:flutter/material.dart';
@@ -31,7 +32,11 @@ class LoginPage extends StatelessWidget {
                   children: [
                     Text("Don'\t have an account?"),
                     TextButton(
-                      onPressed: () {},
+                      onPressed: () {
+                        Navigator.of(
+                          context,
+                        ).pushNamed(AppRoutes.registerRoute);
+                      },
                       child: Text("Register"),
                       style: TextButton.styleFrom(
                         padding: EdgeInsets.symmetric(horizontal: 2),

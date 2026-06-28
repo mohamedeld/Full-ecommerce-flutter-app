@@ -4,6 +4,7 @@ import 'package:ecommerce/view_models/checkout/checkout_cubit.dart';
 import 'package:ecommerce/widgets/cart/cartItem.dart';
 import 'package:ecommerce/widgets/checkout/address_container.dart';
 import 'package:ecommerce/widgets/checkout/bottom_sheet_payment.dart';
+import 'package:ecommerce/widgets/checkout/choose_address_checkout.dart';
 import 'package:ecommerce/widgets/checkout/payment_method_item.dart';
 import 'package:flutter/material.dart';
 import 'package:ecommerce/widgets/checkout/checkout_headline.dart';
@@ -38,14 +39,26 @@ class CheckoutPage extends StatelessWidget {
                       children: [
                         CheckoutHeadline(title: "Address", onTap: () {}),
                         SizedBox(height: 8),
-                        AddressContainer(
-                          title: "Add shipping address",
-                          onTap: () {
-                            Navigator.of(
-                              context,
-                            ).pushNamed(AppRoutes.chooseLocation);
-                          },
-                        ),
+                        if (state.chosenLocation != null)
+                          ChooseAddressCheckout(
+                            location: state.chosenLocation!,
+                            onNavigate: () {
+                              final cubit = context.read<CheckoutCubit>();
+                              cubit.getCheckout();
+                            },
+                          )
+                        else
+                          AddressContainer(
+                            title: "Add shipping address",
+                            onTap: () {
+                              Navigator.of(
+                                context,
+                              ).pushNamed(AppRoutes.chooseLocation).then((_) {
+                                final cubit = context.read<CheckoutCubit>();
+                                cubit.getCheckout();
+                              });
+                            },
+                          ),
                         SizedBox(height: 8),
 
                         CheckoutHeadline(

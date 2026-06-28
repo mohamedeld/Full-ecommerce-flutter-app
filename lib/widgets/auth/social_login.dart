@@ -33,6 +33,12 @@ class SocialLogin extends StatelessWidget {
                 width: 25,
                 height: 25,
                 fit: BoxFit.contain,
+                placeholder: (context, url) => SizedBox(
+                  width: 50,
+                  height: 50,
+                  child: CircularProgressIndicator(),
+                ),
+                errorWidget: (context, url, error) => Icon(Icons.error),
               ),
               const SizedBox(width: 8),
               Text(title),
