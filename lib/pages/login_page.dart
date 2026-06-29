@@ -1,14 +1,17 @@
 import 'package:ecommerce/utils/app_colors.dart';
 import 'package:ecommerce/utils/app_routes.dart';
+import 'package:ecommerce/view_models/auth/auth_cubit.dart';
 import 'package:ecommerce/widgets/auth/login_form.dart';
 import 'package:ecommerce/widgets/auth/social_login.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
 class LoginPage extends StatelessWidget {
   const LoginPage({super.key});
 
   @override
   Widget build(BuildContext context) {
+    final cubit = context.read<AuthCubit>();
     final textTheme = Theme.of(context).textTheme;
     return Scaffold(
       body: SafeArea(
@@ -25,7 +28,7 @@ class LoginPage extends StatelessWidget {
                   style: textTheme.labelLarge?.copyWith(color: AppColors.grey),
                 ),
                 const SizedBox(height: 32),
-                LoginForm(),
+                LoginForm(cubit: cubit),
                 const SizedBox(height: 16),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
