@@ -8,7 +8,7 @@ class MainButton extends StatelessWidget {
 
   const MainButton({
     super.key,
-    required this.title,
+    this.title = '',
     required this.onPress,
     this.isLoading = false,
   });
