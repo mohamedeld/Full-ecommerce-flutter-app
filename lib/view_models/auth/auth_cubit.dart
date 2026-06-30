@@ -37,4 +37,21 @@ class AuthCubit extends Cubit<AuthState> {
       emit(AuthError(message: e.toString()));
     }
   }
+
+  void authCheck() {
+    final user = firebaseAuthServices.currentUser();
+    if (user != null) {
+      emit(AuthDone());
+    }
+  }
+
+  Future<void> logout() async {
+    try {
+      emit(LogoutLoading());
+      await firebaseAuthServices.logout();
+      emit(LogoutDone());
+    } catch (e) {
+      emit(LogoutError(message: e.toString()));
+    }
+  }
 }
