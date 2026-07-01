@@ -57,11 +57,42 @@ class LoginPage extends StatelessWidget {
                   ),
                 ),
                 const SizedBox(height: 16),
-                SocialLogin(
-                  title: "Login with Google",
-                  onTap: () {},
-                  imgUrl:
-                      'https://cdn1.iconfinder.com/data/icons/google-s-logo/150/Google_Icons-09-512.png',
+                BlocConsumer<AuthCubit, AuthState>(
+                  buildWhen: (previous, current) =>
+                      current is GoogleAuthenticating ||
+                      current is GoogleAuthenticated ||
+                      current is GoogleAuthenticateError,
+                  listenWhen: (previous, current) =>
+                      current is GoogleAuthenticating ||
+                      current is GoogleAuthenticated ||
+                      current is GoogleAuthenticateError,
+
+                  listener: (context, state) {
+                    if (state is GoogleAuthenticateError) {
+                      ScaffoldMessenger.of(
+                        context,
+                      ).showSnackBar(SnackBar(content: Text(state.message)));
+                    } else if (state is GoogleAuthenticated) {
+                      Navigator.of(context).pushNamedAndRemoveUntil(
+                        AppRoutes.homeRoute,
+                        (route) => false,
+                      );
+                    }
+                  },
+                  bloc: cubit,
+                  builder: (context, state) {
+                    if (state is GoogleAuthenticating) {
+                      return SocialLogin(onTap: () => {}, isLoading: true);
+                    }
+                    return SocialLogin(
+                      title: "Login with Google",
+                      onTap: () async {
+                        await cubit.authenticateWithGoogle();
+                      },
+                      imgUrl:
+                          'https://cdn1.iconfinder.com/data/icons/google-s-logo/150/Google_Icons-09-512.png',
+                    );
+                  },
                 ),
                 const SizedBox(height: 16),
                 SocialLogin(
