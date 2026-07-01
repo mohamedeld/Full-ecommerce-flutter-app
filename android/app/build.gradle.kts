@@ -8,6 +8,15 @@ plugins {
     id("dev.flutter.flutter-gradle-plugin")
 }
 
+var properties = Properties()
+val localPropertiesFile = rootProject.file("local.properties")
+if (localPropertiesFile.exists()) {
+    properties.load(localPropertiesFile.inputStream())
+}
+
+// Read minSdkVersion from local.properties, fallback to a default value if not found
+val minSdkVersionFromProperties = properties.getProperty("minSdkVersion", "21").toInt()
+
 android {
     namespace = "com.example.ecommerce"
     compileSdk = flutter.compileSdkVersion
@@ -27,7 +36,7 @@ android {
         applicationId = "com.example.ecommerce"
         // You can update the following values to match your application needs.
         // For more information, see: https://flutter.dev/to/review-gradle-config.
-        minSdk = flutter.minSdkVersion
+        minSdk = minSdkVersionFromProperties
         targetSdk = flutter.targetSdkVersion
         versionCode = flutter.versionCode
         versionName = flutter.versionName

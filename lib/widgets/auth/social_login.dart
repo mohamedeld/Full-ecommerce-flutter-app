@@ -6,11 +6,13 @@ class SocialLogin extends StatelessWidget {
   final String title;
   final String imgUrl;
   final VoidCallback onTap;
+  final bool isLoading;
   const SocialLogin({
     super.key,
-    required this.title,
+    this.title = '',
     required this.onTap,
-    required this.imgUrl,
+    this.imgUrl = '',
+    this.isLoading = false,
   });
 
   @override
@@ -25,25 +27,27 @@ class SocialLogin extends StatelessWidget {
         ),
         child: Padding(
           padding: const EdgeInsets.all(12.0),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              CachedNetworkImage(
-                imageUrl: imgUrl,
-                width: 25,
-                height: 25,
-                fit: BoxFit.contain,
-                placeholder: (context, url) => SizedBox(
-                  width: 50,
-                  height: 50,
-                  child: CircularProgressIndicator(),
+          child: isLoading
+              ? Center(child: CircularProgressIndicator.adaptive())
+              : Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    CachedNetworkImage(
+                      imageUrl: imgUrl,
+                      width: 25,
+                      height: 25,
+                      fit: BoxFit.contain,
+                      placeholder: (context, url) => SizedBox(
+                        width: 50,
+                        height: 50,
+                        child: CircularProgressIndicator(),
+                      ),
+                      errorWidget: (context, url, error) => Icon(Icons.error),
+                    ),
+                    const SizedBox(width: 8),
+                    Text(title),
+                  ],
                 ),
-                errorWidget: (context, url, error) => Icon(Icons.error),
-              ),
-              const SizedBox(width: 8),
-              Text(title),
-            ],
-          ),
         ),
       ),
     );
