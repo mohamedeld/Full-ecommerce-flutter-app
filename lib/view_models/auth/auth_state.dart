@@ -29,3 +29,15 @@ final class LogoutError extends AuthState {
 
   LogoutError({required this.message});
 }
+
+final class GoogleAuthenticating extends AuthState {}
+
+final class GoogleAuthenticated extends AuthState {
+  const GoogleAuthenticated();
+}
+
+final class GoogleAuthenticateError extends AuthState {
+  final String message;
+
+  GoogleAuthenticateError({required this.message});
+}
