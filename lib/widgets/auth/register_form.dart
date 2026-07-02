@@ -86,6 +86,7 @@ class _RegisterFormState extends State<RegisterForm> {
                 onPress: () async {
                   if (_formKey.currentState!.validate()) {
                     await widget.cubit.registerWithEmailPassword(
+                      _userNameController.text,
                       _emailController.text,
                       _passwordController.text,
                     );
