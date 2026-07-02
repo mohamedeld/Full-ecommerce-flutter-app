@@ -1,9 +1,11 @@
+import 'package:ecommerce/services/firestore_services.dart';
+import 'package:ecommerce/utils/api_paths.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 
 abstract class AuthServices {
   Future<bool> login(String email, String password);
-  Future<bool> register(String email, String password);
+  Future<bool> register(String username, String email, String password);
   User? currentUser();
   Future<void> logout();
   Future<bool> authenticateWithGoogle();
@@ -12,6 +14,7 @@ abstract class AuthServices {
 class AuthServicesImp implements AuthServices {
   final _firebaseAuth = FirebaseAuth.instance;
   final GoogleSignIn _googleSignIn = GoogleSignIn.instance;
+  final fireStore = FirestoreServices.instance;
   bool _googleSignInInitialized = false;
 
   Future<void> _ensureGoogleSignInInitialized() async {
@@ -36,13 +39,17 @@ class AuthServicesImp implements AuthServices {
   }
 
   @override
-  Future<bool> register(String email, String password) async {
+  Future<bool> register(String username, String email, String password) async {
     final userCredential = await _firebaseAuth.createUserWithEmailAndPassword(
       email: email,
       password: password,
     );
     final user = userCredential.user;
     if (user != null) {
+      await fireStore.setData(
+        path: ApiPaths.users(user.uid),
+        data: {'id': user.uid, 'username': username, 'email': email},
+      );
       return true;
     } else {
       return false;
