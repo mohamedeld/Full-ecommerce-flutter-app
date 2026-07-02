@@ -23,10 +23,18 @@ class AuthCubit extends Cubit<AuthState> {
     }
   }
 
-  Future<void> registerWithEmailPassword(String email, String password) async {
+  Future<void> registerWithEmailPassword(
+    String username,
+    String email,
+    String password,
+  ) async {
     emit(AuthLoading());
     try {
-      final isRegister = await firebaseAuthServices.register(email, password);
+      final isRegister = await firebaseAuthServices.register(
+        username,
+        email,
+        password,
+      );
       debugPrint("is registe ${isRegister}");
       if (isRegister) {
         emit(AuthDone());
