@@ -1,5 +1,4 @@
 import 'package:cached_network_image/cached_network_image.dart';
-import 'package:ecommerce/models/product_item_model.dart';
 import 'package:ecommerce/utils/app_colors.dart';
 import 'package:ecommerce/view_models/product_details/product_details_cubit.dart';
 import 'package:ecommerce/widgets/product_details/product_details_content.dart';
@@ -13,7 +12,6 @@ class ProductDetailsPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final productDetailsCubit = BlocProvider.of<ProductDetailsCubit>(context);
-    final textTheme = Theme.of(context).textTheme;
     return BlocListener<ProductDetailsCubit, ProductDetailsState>(
       listener: (context, state) {
         if (state is ProductDetailsError) {
@@ -49,8 +47,15 @@ class ProductDetailsPage extends StatelessWidget {
                 title: Text("Product Details"),
                 actions: [
                   IconButton(
-                    onPressed: () {},
-                    icon: Icon(Icons.favorite_border),
+                    onPressed: () {
+                      productDetailsCubit.toggleFavorite(state.product);
+                    },
+                    icon: Icon(
+                      state.product.isFavorite
+                          ? Icons.favorite
+                          : Icons.favorite_border,
+                      color: state.product.isFavorite ? Colors.red : null,
+                    ),
                   ),
                 ],
               ),

@@ -56,7 +56,7 @@ class _HomePageCarouselState extends State<HomePageCarousel> {
         const SizedBox(height: 10),
         Row(
           mainAxisAlignment: MainAxisAlignment.center,
-          children: List.generate(dummyHomeCarouselItems.length, (index) {
+          children: List.generate(widget.state.carouselItems.length, (index) {
             final isActive = index == _currentIndex;
             return AnimatedContainer(
               duration: const Duration(milliseconds: 250),
