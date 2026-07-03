@@ -1,3 +1,4 @@
+import 'package:ecommerce/models/user_data_model.dart';
 import 'package:ecommerce/services/firestore_services.dart';
 import 'package:ecommerce/utils/api_paths.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -45,10 +46,16 @@ class AuthServicesImp implements AuthServices {
       password: password,
     );
     final user = userCredential.user;
+    final userData = UserData(
+      id: user?.uid ?? '',
+      username: username,
+      email: email,
+      createdAt: DateTime.now().toIso8601String(),
+    );
     if (user != null) {
       await fireStore.setData(
         path: ApiPaths.users(user.uid),
-        data: {'id': user.uid, 'username': username, 'email': email},
+        data: userData.toMap(),
       );
       return true;
     } else {

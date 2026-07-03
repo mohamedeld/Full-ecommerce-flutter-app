@@ -1,7 +1,8 @@
-import 'package:ecommerce/models/add_to_cart_model.dart';
-import 'package:ecommerce/widgets/product_item.dart';
-import 'package:flutter/foundation.dart';
+import 'package:ecommerce/services/auth_services.dart';
+import 'package:ecommerce/services/home_services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:ecommerce/models/add_to_cart_model.dart';
+import 'package:ecommerce/services/product_details_services.dart';
 import 'package:ecommerce/models/product_item_model.dart';
 
 part 'product_details_state.dart';
@@ -10,15 +11,49 @@ class ProductDetailsCubit extends Cubit<ProductDetailsState> {
   Map<String, int> productQuantities = {};
   ProductSize? selectedSize;
   ProductDetailsCubit() : super(ProductDetailsInitial());
+  final productDetailsServices = ProductDetailsServicesImp();
+  final homeServices = HomeServicesImp();
+  final authServices = AuthServicesImp();
 
-  void getProductDetails(String id) {
+  Future<void> getProductDetails(String id) async {
     emit(ProductDetailsLoading());
+    try {
+      final result = await productDetailsServices.fetchProductDetails(id);
+      if (result != null) {
+        productQuantities[id] = productQuantities[id] ?? 1;
 
-    Future.delayed(Duration(seconds: 1), () {
-      final product = dummyProducts.firstWhere((item) => item.id == id);
-      productQuantities[id] = productQuantities[id] ?? 1;
+        final user = authServices.currentUser();
+        final isFavorite = user == null
+            ? false
+            : await homeServices.isFavoriteProduct(user.uid, result.id);
+
+        emit(
+          ProductDetailsLoaded(
+            product: result.copyWith(isFavorite: isFavorite),
+          ),
+        );
+      }
+    } catch (e) {
+      emit(ProductDetailsError(message: e.toString()));
+    }
+  }
+
+  Future<void> toggleFavorite(ProductItemModel product) async {
+    final user = authServices.currentUser();
+    if (user == null) {
+      emit(ProductDetailsError(message: 'User not authenticated'));
+      return;
+    }
+
+    final updatedProduct = product.copyWith(isFavorite: !product.isFavorite);
+    emit(ProductDetailsLoaded(product: updatedProduct));
+
+    try {
+      await homeServices.toggleFavoriteProduct(user.uid, product);
+    } catch (e) {
       emit(ProductDetailsLoaded(product: product));
-    });
+      emit(ProductDetailsError(message: e.toString()));
+    }
   }
 
   void incrementCounter(String productId, [int? initialValue]) {
@@ -58,44 +93,29 @@ class ProductDetailsCubit extends Cubit<ProductDetailsState> {
   }
 
   // In product_details_cubit.dart addToCart method
-  void addToCart(ProductItemModel product) {
-    if (selectedSize == null) {
-      emit(ProductDetailsError(message: "Please select a size first"));
-      return;
-    }
+  Future<void> addToCart(ProductItemModel product) async {
+    try {
+      if (selectedSize == null) {
+        emit(ProductDetailsError(message: "Please select a size first"));
+        return;
+      }
 
-    int quantity = productQuantities[product.id] ?? 1;
-    if (quantity <= 0) quantity = 1;
+      int quantity = productQuantities[product.id] ?? 1;
+      if (quantity <= 0) quantity = 1;
+      emit(ProductAddingToCart());
 
-    emit(ProductAddingToCart());
-
-    // Check if product already in cart, if so update quantity
-    final existingIndex = dummyCart.indexWhere(
-      (item) => item.product.id == product.id && item.size == selectedSize,
-    );
-
-    if (existingIndex != -1) {
-      // Update existing item
-      final existingItem = dummyCart[existingIndex];
-      dummyCart[existingIndex] = AddToCartModel(
-        id: existingItem.id,
-        product: product,
-        size: selectedSize!,
-        quantity: existingItem.quantity + quantity,
+      await productDetailsServices.addToCart(
+        AddToCartModel(
+          id: DateTime.now().toString(),
+          product: product,
+          size: selectedSize!,
+          quantity: quantity,
+        ),
+        authServices.currentUser()!.uid, // Replace with actual user ID
       );
-    } else {
-      // Add new item
-      final AddToCartModel cartItem = AddToCartModel(
-        id: DateTime.now().toString(),
-        product: product,
-        size: selectedSize!,
-        quantity: quantity,
-      );
-      dummyCart.add(cartItem);
-    }
-
-    Future.delayed(const Duration(seconds: 1), () {
       emit(AddedToCart(productId: product.id));
-    });
+    } catch (e) {
+      emit(ProductDetailsError(message: e.toString()));
+    }
   }
 }

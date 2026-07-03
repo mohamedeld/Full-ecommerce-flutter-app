@@ -20,3 +20,15 @@ final class HomeError extends HomeState {
 
   final String message;
 }
+
+final class FavoriteProductLoading extends HomeState {}
+
+final class FavoriteProductLoaded extends HomeState {
+  FavoriteProductLoaded();
+}
+
+final class FavoriteError extends HomeState {
+  FavoriteError({required this.message});
+
+  final String message;
+}

@@ -1,6 +1,8 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:ecommerce/models/product_item_model.dart';
+import 'package:ecommerce/view_models/home_cubit/home_cubit.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
 class ProductItem extends StatelessWidget {
   final ProductItemModel product;
@@ -9,7 +11,7 @@ class ProductItem extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final textTheme = Theme.of(context).textTheme;
-    final size = MediaQuery.of(context).size;
+    final homeCubit = BlocProvider.of<HomeCubit>(context);
     return Column(
       children: [
         Stack(
@@ -48,8 +50,13 @@ class ProductItem extends StatelessWidget {
                   color: Colors.white,
                 ),
                 child: IconButton(
-                  onPressed: () {},
-                  icon: Icon(Icons.favorite_border),
+                  onPressed: () async {
+                    await homeCubit.toggleFavorite(product);
+                  },
+                  icon: Icon(
+                    product.isFavorite ? Icons.favorite : Icons.favorite_border,
+                    color: product.isFavorite ? Colors.red : null,
+                  ),
                 ),
               ),
             ),
