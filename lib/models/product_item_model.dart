@@ -52,6 +52,69 @@ class ProductItemModel {
       size: size ?? this.size,
     );
   }
+
+  Map<String, dynamic> toMap() {
+    final result = <String, dynamic>{};
+
+    result.addAll({'id': id});
+    result.addAll({'title': title});
+    result.addAll({'imgUrl': imgUrl});
+    result.addAll({'description': description});
+    result.addAll({'price': price});
+    result.addAll({'isFavorite': isFavorite});
+    result.addAll({'category': category});
+    result.addAll({'quantity': quantity});
+    result.addAll({'avgRate': avgRate});
+    if (size != null) {
+      result.addAll({'size': size!.index});
+    }
+
+    return result;
+  }
+
+  factory ProductItemModel.fromMap(
+    Map<String, dynamic> map,
+    String documentId,
+  ) {
+    return ProductItemModel(
+      id: documentId,
+      title: map['title'] ?? '',
+      imgUrl: map['imgUrl'] ?? '',
+      description: map['description'] ?? '',
+      price: map['price']?.toDouble() ?? 0.0,
+      isFavorite: map['isFavorite'] ?? false,
+      category: map['category'] ?? 'others',
+      quantity: map['quantity'] ?? 1,
+      avgRate: map['avgRate']?.toDouble() ?? 0.0,
+      size: _parseProductSize(map['size']),
+    );
+  }
+
+  static ProductSize? _parseProductSize(dynamic value) {
+    if (value == null) return null;
+
+    if (value is int && value >= 0 && value < ProductSize.values.length) {
+      return ProductSize.values[value];
+    }
+
+    if (value is String) {
+      final asIndex = int.tryParse(value);
+      if (asIndex != null &&
+          asIndex >= 0 &&
+          asIndex < ProductSize.values.length) {
+        return ProductSize.values[asIndex];
+      }
+
+      final normalized = value.trim().toUpperCase();
+      for (final size in ProductSize.values) {
+        if (size.name.toUpperCase() == normalized) {
+          return size;
+        }
+      }
+    }
+
+    return null;
+  }
 }
 
 List<ProductItemModel> dummyProducts = [

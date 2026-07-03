@@ -15,6 +15,27 @@ class CategoryModel {
     this.bgColor = AppColors.primary,
     this.textColor = AppColors.white,
   });
+
+  Map<String, dynamic> toMap() {
+    final result = <String, dynamic>{};
+
+    result.addAll({'id': id});
+    result.addAll({'name': name});
+    result.addAll({'productsCount': productsCount});
+    result.addAll({'bgColor': bgColor.value});
+    result.addAll({'textColor': textColor.value});
+    return result;
+  }
+
+  factory CategoryModel.fromMap(Map<String, dynamic> map) {
+    return CategoryModel(
+      id: map['id'] ?? '',
+      name: map['name'] ?? '',
+      productsCount: map['productsCount']?.toInt() ?? 0,
+      bgColor: Color(map['bgColor'] ?? AppColors.primary),
+      textColor: Color(map['textColor'] ?? AppColors.white),
+    );
+  }
 }
 
 List<CategoryModel> dummyCategories = [

@@ -35,7 +35,7 @@ class AuthCubit extends Cubit<AuthState> {
         email,
         password,
       );
-      debugPrint("is registe ${isRegister}");
+
       if (isRegister) {
         emit(AuthDone());
       } else {
