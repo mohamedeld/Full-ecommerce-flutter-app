@@ -1,5 +1,6 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:ecommerce/utils/app_colors.dart';
+import 'package:ecommerce/view_models/favorites/favorite_cubit.dart';
 import 'package:ecommerce/view_models/product_details/product_details_cubit.dart';
 import 'package:ecommerce/widgets/product_details/product_details_content.dart';
 import 'package:flutter/material.dart';
@@ -47,8 +48,11 @@ class ProductDetailsPage extends StatelessWidget {
                 title: Text("Product Details"),
                 actions: [
                   IconButton(
-                    onPressed: () {
-                      productDetailsCubit.toggleFavorite(state.product);
+                    onPressed: () async {
+                      await productDetailsCubit.toggleFavorite(state.product);
+                      try {
+                        await context.read<FavoriteCubit>().getFavorites();
+                      } catch (_) {}
                     },
                     icon: Icon(
                       state.product.isFavorite

@@ -1,5 +1,6 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:ecommerce/models/product_item_model.dart';
+import 'package:ecommerce/view_models/favorites/favorite_cubit.dart';
 import 'package:ecommerce/view_models/home_cubit/home_cubit.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -52,6 +53,9 @@ class ProductItem extends StatelessWidget {
                 child: IconButton(
                   onPressed: () async {
                     await homeCubit.toggleFavorite(product);
+                    try {
+                      await context.read<FavoriteCubit>().getFavorites();
+                    } catch (_) {}
                   },
                   icon: Icon(
                     product.isFavorite ? Icons.favorite : Icons.favorite_border,
