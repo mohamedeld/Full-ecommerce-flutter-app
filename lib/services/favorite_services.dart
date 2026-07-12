@@ -3,19 +3,29 @@ import 'package:ecommerce/services/firestore_services.dart';
 import 'package:ecommerce/utils/api_paths.dart';
 
 abstract class FavoriteServices {
-  Future<void> addFavorite(String userId, ProductItemModel product);
-  Future<void> removeFavorite(String userId, ProductItemModel product);
+  Future<void> toggleFavorites(String userId, ProductItemModel product);
   Future<List<ProductItemModel>> getFavorites(String userId);
+  Future<void> removeFavorite(String userId, String productId);
 }
 
 class FavoriteServicesImp implements FavoriteServices {
   final firestoreServices = FirestoreServices.instance;
   @override
-  Future<void> addFavorite(String userId, ProductItemModel product) async {
-    await firestoreServices.setData(
-      path: ApiPaths.favoriteProducts(userId, product.id),
-      data: product.toMap(),
-    );
+  Future<void> toggleFavorites(String userId, ProductItemModel product) async {
+    final favoriteProductPath = ApiPaths.favoriteProducts(userId, product.id);
+
+    final existingFavorite = await firestoreServices.firestore
+        .doc(favoriteProductPath)
+        .get();
+
+    if (existingFavorite.exists) {
+      await firestoreServices.deleteData(path: favoriteProductPath);
+    } else {
+      await firestoreServices.setData(
+        path: favoriteProductPath,
+        data: product.toMap(),
+      );
+    }
   }
 
   @override
@@ -29,9 +39,8 @@ class FavoriteServicesImp implements FavoriteServices {
   }
 
   @override
-  Future<void> removeFavorite(String userId, ProductItemModel product) async {
-    await firestoreServices.deleteData(
-      path: ApiPaths.favoriteProducts(userId, product.id),
-    );
+  Future<void> removeFavorite(String userId, String productId) {
+    final favoriteProductPath = ApiPaths.favoriteProducts(userId, productId);
+    return firestoreServices.deleteData(path: favoriteProductPath);
   }
 }
