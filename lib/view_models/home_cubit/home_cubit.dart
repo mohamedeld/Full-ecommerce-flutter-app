@@ -1,6 +1,7 @@
 import 'package:ecommerce/models/home_carousel_item_model.dart';
 import 'package:ecommerce/models/product_item_model.dart';
 import 'package:ecommerce/services/auth_services.dart';
+import 'package:ecommerce/services/favorite_services.dart';
 import 'package:ecommerce/services/home_services.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -11,6 +12,7 @@ class HomeCubit extends Cubit<HomeState> {
   HomeCubit() : super(HomeCubitInitial());
   final homeServices = HomeServicesImp();
   final authServices = AuthServicesImp();
+  final favoriteServices = FavoriteServicesImp();
 
   Future<void> getHomeData() async {
     emit(HomeLoading());
@@ -67,7 +69,7 @@ class HomeCubit extends Cubit<HomeState> {
     );
 
     try {
-      await homeServices.toggleFavoriteProduct(user.uid, product);
+      await favoriteServices.toggleFavorites(user.uid, product);
     } catch (error) {
       emit(
         HomeLoaded(

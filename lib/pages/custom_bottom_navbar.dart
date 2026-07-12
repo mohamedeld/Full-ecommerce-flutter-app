@@ -1,5 +1,6 @@
-import 'package:ecommerce/widgets/navbar_widget.dart';
+import 'package:ecommerce/view_models/favorites/favorite_cubit.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:persistent_bottom_nav_bar_v2/persistent_bottom_nav_bar_v2.dart';
 import 'package:ecommerce/pages/cart_page.dart';
 import 'package:ecommerce/pages/favorite_page.dart';
@@ -18,61 +19,88 @@ class _CustomBottomNavbarState extends State<CustomBottomNavbar> {
   @override
   Widget build(BuildContext context) {
     final textTheme = Theme.of(context).textTheme;
-    return Scaffold(
-      appBar: AppBar(
-        leading: Padding(
-          padding: const EdgeInsets.only(left: 4.0),
-          child: CircleAvatar(
-            backgroundImage: AssetImage("assets/images/mohamed.jpeg"),
-            radius: 25,
-          ),
-        ),
-        title: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text("Mohamed Elrfaay", style: textTheme.labelLarge),
-            SizedBox(height: 2),
-            Text(
-              "Let\'s go shopping",
-              style: textTheme.labelSmall?.copyWith(color: Colors.grey),
+    return BlocProvider<FavoriteCubit>(
+      create: (context) {
+        final cubit = FavoriteCubit();
+        cubit.getFavorites();
+        return cubit;
+      },
+      child: Builder(
+        builder: (providerContext) => Scaffold(
+          appBar: AppBar(
+            leading: Padding(
+              padding: const EdgeInsets.only(left: 4.0),
+              child: CircleAvatar(
+                backgroundImage: AssetImage("assets/images/mohamed.jpeg"),
+                radius: 25,
+              ),
             ),
-          ],
+            title: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text("Mohamed Elrfaay", style: textTheme.labelLarge),
+                SizedBox(height: 2),
+                Text(
+                  "Let\'s go shopping",
+                  style: textTheme.labelSmall?.copyWith(color: Colors.grey),
+                ),
+              ],
+            ),
+            actions: [
+              if (currentIndex == 0) ...[
+                IconButton(onPressed: () {}, icon: const Icon(Icons.search)),
+                IconButton(
+                  onPressed: () {},
+                  icon: const Icon(Icons.notifications),
+                ),
+              ] else if (currentIndex == 2) ...[
+                IconButton(
+                  onPressed: () {},
+                  icon: const Icon(Icons.shopping_bag),
+                ),
+              ],
+            ],
+          ),
+          body: PersistentTabView(
+            onTabChanged: (index) {
+              setState(() {
+                currentIndex = index;
+              });
+              if (index == 1) {
+                providerContext.read<FavoriteCubit>().getFavorites();
+              }
+            },
+            tabs: [
+              PersistentTabConfig(
+                screen: HomePage(),
+                item: ItemConfig(icon: Icon(Icons.home), title: "Home"),
+              ),
+              PersistentTabConfig(
+                screen: FavoritePage(),
+                item: ItemConfig(
+                  icon: Icon(Icons.favorite),
+                  title: "Favorites",
+                ),
+              ),
+              PersistentTabConfig(
+                screen: CartPage(),
+                item: ItemConfig(
+                  icon: Icon(Icons.shopping_cart),
+                  title: "Cart",
+                ),
+              ),
+              PersistentTabConfig(
+                screen: ProfilePage(),
+                item: ItemConfig(
+                  icon: Icon(Icons.account_box),
+                  title: "Account",
+                ),
+              ),
+            ],
+            navBarBuilder: (navBarConfig) =>
+                Style1BottomNavBar(navBarConfig: navBarConfig),
+          ),
         ),
-        actions: [
-          if (currentIndex == 0) ...[
-            IconButton(onPressed: () {}, icon: const Icon(Icons.search)),
-            IconButton(onPressed: () {}, icon: const Icon(Icons.notifications)),
-          ] else if (currentIndex == 2) ...[
-            IconButton(onPressed: () {}, icon: const Icon(Icons.shopping_bag)),
-          ],
-        ],
-      ),
-      body: PersistentTabView(
-        onTabChanged: (index) {
-          setState(() {
-            currentIndex = index;
-          });
-        },
-        tabs: [
-          PersistentTabConfig(
-            screen: HomePage(),
-            item: ItemConfig(icon: Icon(Icons.home), title: "Home"),
-          ),
-          PersistentTabConfig(
-            screen: FavoritePage(),
-            item: ItemConfig(icon: Icon(Icons.favorite), title: "Favorites"),
-          ),
-          PersistentTabConfig(
-            screen: CartPage(),
-            item: ItemConfig(icon: Icon(Icons.shopping_cart), title: "Cart"),
-          ),
-          PersistentTabConfig(
-            screen: ProfilePage(),
-            item: ItemConfig(icon: Icon(Icons.account_box), title: "Account"),
-          ),
-        ],
-        navBarBuilder: (navBarConfig) =>
-            Style1BottomNavBar(navBarConfig: navBarConfig),
       ),
     );
   }
